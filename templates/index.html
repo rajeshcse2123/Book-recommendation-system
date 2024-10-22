@@ -2,59 +2,69 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Book Recommender System</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
-          rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH"
-          crossorigin="anonymous">
+    <link rel="icon" type="image/x-icon" href="{{ url_for('static', filename='favicon.ico') }}">
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <style>
+        .book-card {
+            transition: transform 0.3s ease-in-out;
+        }
+        .book-card:hover {
+            transform: scale(1.05);
+        }
+    </style>
 </head>
-<style>
-    .navbar-nav {
-      display: flex;
-      flex-direction: row;
-      gap: 20px;
-    }
-    .text-white{
-        color:white
-    }
-
-</style>
-<body style="background-color:black">
-
-    <nav class="navbar" style="background-color:#00a65a">
-      <div class="container-fluid">
-        <a class="navbar-brand ms-3"> My Book Recommender</a>
-
-<!--        !&#45;&#45; Right-aligned links &ndash;&gt;-->
-          <ul class="nav navbar-nav mx-auto">
-            <li><a href="/">Home</a></li>
-            <li><a href="/recommend">Recommend</a></li>
-            <li><a>Contact</a></li>
-          </ul>
-      </div>
+<body class="bg-black min-h-screen text-white">
+    <nav class="bg-gray-900 p-5 shadow-md">
+        <div class="container mx-auto flex justify-between items-center">
+            <a href="/" class="text-2xl font-bold text-white flex items-center">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-7 w-7 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
+                </svg>
+                My Book Recommender
+            </a>
+            <div class="space-x-6">
+                <a href="/" class="text-white hover:text-gray-300 text-base font-medium border-b-2 border-transparent hover:border-white pb-1">Home</a>
+                <a href="/recommend" class="text-white hover:text-gray-300 text-base font-medium border-b-2 border-transparent hover:border-white pb-1">Recommend</a>
+                <a href="#" class="text-white hover:text-gray-300 text-base font-medium border-b-2 border-transparent hover:border-white pb-1">Contact</a>
+            </div>
+        </div>
     </nav>
 
-   <div class="container mt-4">
-       <div class="row">
-           <div class="col-12">
-               <h1 class="text-white" style="font-size:50px">Top 50 Books</h1>
-           </div>
+    <main class="container mx-auto mt-8 px-4">
+        <h1 class="text-4xl font-bold mb-8 text-white">Top 50 Books</h1>
+        <div id="book-list" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            {% for i in range(book_name|length) %}
+            <div class="book-card bg-gray-800 rounded-lg shadow-lg overflow-hidden">
+                <img src="{{ image[i] }}" alt="{{ book_name[i] }}" class="w-full h-64 object-cover">
+                <div class="p-4">
+                    <h2 class="text-xl font-semibold mb-2 text-white">{{ book_name[i] }}</h2>
+                    <p class="text-gray-400 mb-2">{{ author[i] }}</p>
+                    <div class="flex justify-between text-sm text-gray-400">
+                        <span>Votes: {{ votes[i] }}</span>
+                        <span>Rating: {{ rating[i] }}</span>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </main>
 
+    <footer class="bg-gray-900 mt-12 py-6 text-center text-white">
+        <p>&copy; 2024 My Book Recommender. All rights reserved.</p>
+    </footer>
 
-           {% for i in range(book_name|length) %}
-             <div class="col-3" style="margin-top:40px">
-                   <div class="card-body">
-                       <img class="card-img-top" src="{{ image[i] }}"
-                        style="width: 150px; height: 210px;">
-                       <h4 class="text-white" style="margin-top:20px">{{ book_name[i] }}</h4>
-                       <h6 class="text-white" style="margin-top:10px">{{ author[i] }}</h6>
-                       <h6 class="text-white">Votes - {{ votes[i] }}</h6>
-                       <h6 class="text-white">Rating - {{ rating[i] }}</h6>
-                   </div>
-             </div>
-           {% endfor %}
-
-       </div>
-   </div>
-
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const currentPath = window.location.pathname;
+            const navLinks = document.querySelectorAll('nav a');
+            navLinks.forEach(link => {
+                if (link.getAttribute('href') === currentPath) {
+                    link.classList.add('border-white');
+                }
+            });
+        });
+    </script>
 </body>
 </html>
